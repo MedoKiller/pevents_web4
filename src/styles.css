@@ -8,6 +8,10 @@
     width: fit-content;
 }
 
+.p-multiselect {
+    width: 200px;
+}
+
 .horizontal-menu .p-menu-list {
     display: flex;
     flex-direction: row; /* Display menu items horizontally */

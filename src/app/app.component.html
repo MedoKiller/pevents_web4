@@ -2,29 +2,37 @@
   <p-menu [model]="items" styleClass="horizontal-menu"></p-menu>
 </div>
 
-<div style="margin-top: 25px;">
+<div *ngIf="menuItemClicked === 'searchEvent'" style="margin-top: 25px;">
   <div>
-    <label for="cityNameSearch">City name</label>
+    <label>Event name</label>
   </div>
   <div>
-    <input type="text" pInputText [(ngModel)]="cityNameSearch" />
+    <input type="text" pInputText [(ngModel)]="eventNameSearch" />
   </div>
   <div style="margin-top: 10px;">
-    <label for="dateFromSearch">Event start date</label>
+    <label>Event start date</label>
   </div>
   <div>
     <p-calendar [showIcon]="true" [showTime]="true" [(ngModel)]="dateFromSearch"></p-calendar>
   </div>
   <div style="margin-top: 10px;">
-    <label for="dateToSearch">Event end date</label>
+    <label>Event end date</label>
   </div>
   <div>
     <p-calendar [showIcon]="true" [showTime]="true" [(ngModel)]="dateToSearch"></p-calendar>
   </div>
   <div style="margin-top: 10px;">
-    <label for="dateFromSearch">Event start date</label>
+    <label>Event start date</label>
   </div>
   <div>
     <p-dropdown [options]="freeEntrancePick" [(ngModel)]="selectedfreeEntrancePick" optionLabel="name" [showClear]="true" placeholder="Free entrance?"></p-dropdown>
+  </div>
+  <div style="margin-top: 10px;">
+    <label style="margin: 5px;">Region:</label>
+    <p-multiSelect [options]="regions" [(ngModel)]="selectedRegions" optionLabel="name"></p-multiSelect>
+    <label style="margin: 5px;">Municipality:</label>
+    <p-multiSelect [options]="municipalities" [(ngModel)]="selectedMunicipalities" optionLabel="name"></p-multiSelect>
+    <label style="margin: 5px;">Cities:</label>
+    <p-multiSelect [options]="cities" [(ngModel)]="selectedCities" optionLabel="name"></p-multiSelect>
   </div>
 </div>

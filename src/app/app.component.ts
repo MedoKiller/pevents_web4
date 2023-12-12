@@ -1,17 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { Event } from './event';
-import { EventService } from './event.service';
 import { HttpErrorResponse } from '@angular/common/http';
 
-import { MenuItem } from 'primeng/api';
 import { FreeEntrancePicker } from './freeEntrancePicker';
+import { Event } from './event';
+import { EventService } from './event.service';
+import { City } from './city';
+import { Municipality } from './municipality';
+import { Region } from './region';
 
 
 
-interface City {
-  name: string,
-  code: string
-}
+import { MenuItem } from 'primeng/api';
+
+
 
 @Component({
   selector: 'app-root',
@@ -20,39 +21,57 @@ interface City {
 })
 export class AppComponent implements OnInit {
 
+  constructor(private eventService: EventService){}
+
   public events: Event[] = [];
 
   items: MenuItem[] =[];
 
   /*Search form components*/
-  cityNameSearch: string='';
+  eventNameSearch: string='';
   dateFromSearch: Date | undefined;
   dateToSearch: Date | undefined;
   freeEntrancePick: FreeEntrancePicker[] |undefined;
   selectedfreeEntrancePick:FreeEntrancePicker|undefined;
 
-  constructor(private eventService: EventService){}
+  regions: Region[] =[];
+  selectedRegions: Region[]=[];
+
+  municipalities: Municipality[]=[];
+  selectedMunicipalities: Municipality[]=[];
 
   cities!: City[];
-
   selectedCities!: City[];
 
   ngOnInit(): void {
     /*this.getEvents(); */
-  this.freeEntrancePick=[
-  {name: 'YES', value: 'YES'},
-  {name: 'NO', value: 'NO'}];
-
   this.items = [
+    { label: 'Add new event',
+      icon: 'pi pi-fw pi-plus',
+      command: () => this.onAddEventClick()
+    },
+    { label: 'Search events',
+      icon: 'pi pi-fw pi-search',
+      command: () => this.onSearchEventClick()
+    }];
+
+  this.freeEntrancePick=[
     {
-        label: 'Add new event',
-        icon: 'pi pi-fw pi-plus',
+      name: 'YES', value: 'YES'
     },
     {
-        label: 'Search events',
-        icon: 'pi pi-fw pi-search'
-    }
-  ];
+      name: 'NO', value: 'NO'
+    }];
+  }
+
+  menuItemClicked: string='searchEvent';
+
+  public onAddEventClick(){
+    this.menuItemClicked='addEvent';
+  }
+
+  public onSearchEventClick(){
+    this.menuItemClicked='searchEvent';
   }
 
   public getEvents(): void {
