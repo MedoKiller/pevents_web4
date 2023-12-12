@@ -1,11 +1,30 @@
-<div *ngFor = "let event of events">
-  <div>{{event.name}}</div>
+<div class="card flex justify-content-center">
+  <p-menu [model]="items" styleClass="horizontal-menu"></p-menu>
 </div>
 
-<div class="card flex justify-content-center">
-  <p-multiSelect [options]="cities" [(ngModel)]="selectedCities" optionLabel="name"></p-multiSelect>
-</div>
-
-<div class="card flex justify-content-center">
-  <p-multiSelect [options]="selectedCities" optionLabel="name"></p-multiSelect>
+<div style="margin-top: 25px;">
+  <div>
+    <label for="cityNameSearch">City name</label>
+  </div>
+  <div>
+    <input type="text" pInputText [(ngModel)]="cityNameSearch" />
+  </div>
+  <div style="margin-top: 10px;">
+    <label for="dateFromSearch">Event start date</label>
+  </div>
+  <div>
+    <p-calendar [showIcon]="true" [showTime]="true" [(ngModel)]="dateFromSearch"></p-calendar>
+  </div>
+  <div style="margin-top: 10px;">
+    <label for="dateToSearch">Event end date</label>
+  </div>
+  <div>
+    <p-calendar [showIcon]="true" [showTime]="true" [(ngModel)]="dateToSearch"></p-calendar>
+  </div>
+  <div style="margin-top: 10px;">
+    <label for="dateFromSearch">Event start date</label>
+  </div>
+  <div>
+    <p-dropdown [options]="freeEntrancePick" [(ngModel)]="selectedfreeEntrancePick" optionLabel="name" [showClear]="true" placeholder="Free entrance?"></p-dropdown>
+  </div>
 </div>

@@ -11,6 +11,15 @@ import { FormsModule } from '@angular/forms';
 
 import { MultiSelectModule } from 'primeng/multiselect';
 
+import { MenuModule } from 'primeng/menu';
+import { InputTextModule } from 'primeng/inputtext';
+import { CalendarModule } from 'primeng/calendar';
+import { DropdownModule } from 'primeng/dropdown';
+
+
+
+
+
 @NgModule({
   declarations: [
     AppComponent
@@ -21,7 +30,11 @@ import { MultiSelectModule } from 'primeng/multiselect';
     HttpClientModule,
     BrowserAnimationsModule,
     MultiSelectModule,
-    FormsModule
+    FormsModule,
+    MenuModule,
+    InputTextModule,
+    CalendarModule,
+    DropdownModule
   ],
   providers: [EventService],
   bootstrap: [AppComponent]

@@ -3,6 +3,10 @@ import { Event } from './event';
 import { EventService } from './event.service';
 import { HttpErrorResponse } from '@angular/common/http';
 
+import { MenuItem } from 'primeng/api';
+import { FreeEntrancePicker } from './freeEntrancePicker';
+
+
 
 interface City {
   name: string,
@@ -18,6 +22,15 @@ export class AppComponent implements OnInit {
 
   public events: Event[] = [];
 
+  items: MenuItem[] =[];
+
+  /*Search form components*/
+  cityNameSearch: string='';
+  dateFromSearch: Date | undefined;
+  dateToSearch: Date | undefined;
+  freeEntrancePick: FreeEntrancePicker[] |undefined;
+  selectedfreeEntrancePick:FreeEntrancePicker|undefined;
+
   constructor(private eventService: EventService){}
 
   cities!: City[];
@@ -26,13 +39,20 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     /*this.getEvents(); */
-    this.cities = [
-      {name: 'New York', code: 'NY'},
-      {name: 'Rome', code: 'RM'},
-      {name: 'London', code: 'LDN'},
-      {name: 'Istanbul', code: 'IST'},
-      {name: 'Paris', code: 'PRS'}
-  ]; 
+  this.freeEntrancePick=[
+  {name: 'YES', value: 'YES'},
+  {name: 'NO', value: 'NO'}];
+
+  this.items = [
+    {
+        label: 'Add new event',
+        icon: 'pi pi-fw pi-plus',
+    },
+    {
+        label: 'Search events',
+        icon: 'pi pi-fw pi-search'
+    }
+  ];
   }
 
   public getEvents(): void {
