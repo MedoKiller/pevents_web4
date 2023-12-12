@@ -35,4 +35,7 @@
     <label style="margin: 5px;">Cities:</label>
     <p-multiSelect [options]="cities" [(ngModel)]="selectedCities" optionLabel="name"></p-multiSelect>
   </div>
+  <div class="card flex justify-content-center" style="margin-top: 10px;">
+    <p-button [loading]="loading" label="Search"></p-button>
+  </div>
 </div>

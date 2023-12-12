@@ -74,6 +74,8 @@ export class AppComponent implements OnInit {
     this.menuItemClicked='searchEvent';
   }
 
+  loading: boolean=false; /*iskoristi ovo kad napravis dohvat podataka nakon submita forme, napravi fciju onLoad() koja hendla ovu varijablu*/
+
   public getEvents(): void {
     this.eventService.getEvents().subscribe(
       (response: Event[]) => {

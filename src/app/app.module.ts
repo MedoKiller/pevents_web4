@@ -10,12 +10,11 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
 import { MultiSelectModule } from 'primeng/multiselect';
-
 import { MenuModule } from 'primeng/menu';
 import { InputTextModule } from 'primeng/inputtext';
 import { CalendarModule } from 'primeng/calendar';
 import { DropdownModule } from 'primeng/dropdown';
-
+import { ButtonModule } from 'primeng/button';
 
 
 
@@ -34,7 +33,8 @@ import { DropdownModule } from 'primeng/dropdown';
     MenuModule,
     InputTextModule,
     CalendarModule,
-    DropdownModule
+    DropdownModule,
+    ButtonModule
   ],
   providers: [EventService],
   bootstrap: [AppComponent]
