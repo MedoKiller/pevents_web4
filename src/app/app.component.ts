@@ -1,16 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 
-import { FreeEntrancePicker } from './freeEntrancePicker';
-import { Event } from './event';
-import { EventService } from './event.service';
-import { City } from './city';
-import { Municipality } from './municipality';
-import { Region } from './region';
+import { FreeEntrancePicker } from './interfaces/freeEntrancePicker';
+import { Event } from './interfaces/event';
 
+import { City } from './interfaces/city';
+import { OrganizationUnit } from './interfaces/organizationUnit';
+
+import { EventService } from './event.service';
+import { OrganizationUnitService } from './organizationUnit.service';
 
 
 import { MenuItem } from 'primeng/api';
+
 
 
 
@@ -21,7 +23,7 @@ import { MenuItem } from 'primeng/api';
 })
 export class AppComponent implements OnInit {
 
-  constructor(private eventService: EventService){}
+  constructor(private eventService: EventService, private OrganizationUnitService: OrganizationUnitService){}
 
   public events: Event[] = [];
 
@@ -34,11 +36,11 @@ export class AppComponent implements OnInit {
   freeEntrancePick: FreeEntrancePicker[] |undefined;
   selectedfreeEntrancePick:FreeEntrancePicker|undefined;
 
-  regions: Region[] =[];
-  selectedRegions: Region[]=[];
+  regions: OrganizationUnit[] =[];
+  selectedRegions: OrganizationUnit[]=[];
 
-  municipalities: Municipality[]=[];
-  selectedMunicipalities: Municipality[]=[];
+  municipalities: OrganizationUnit[]=[];
+  selectedMunicipalities: OrganizationUnit[]=[];
 
   cities!: City[];
   selectedCities!: City[];
@@ -62,6 +64,9 @@ export class AppComponent implements OnInit {
     {
       name: 'NO', value: 'NO'
     }];
+
+    this.getAllRegions();
+
   }
 
   menuItemClicked: string='searchEvent';
@@ -82,6 +87,17 @@ export class AppComponent implements OnInit {
         this.events = response;
       },
       (error: HttpErrorResponse) => {
+        alert(error.message);
+      }
+    );
+  }
+
+  public getAllRegions(): void{
+    this.OrganizationUnitService.getAllRegions().subscribe(
+      (response: OrganizationUnit[])=>{
+        this.regions=response;
+      },
+      (error: HttpErrorResponse)=>{
         alert(error.message);
       }
     );
