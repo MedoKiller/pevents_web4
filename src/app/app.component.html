@@ -29,9 +29,11 @@
   </div>
   <div style="margin-top: 10px;">
     <label style="margin: 5px;">Region:</label>
-    <p-multiSelect [options]="regions" [(ngModel)]="selectedRegions" optionLabel="name"></p-multiSelect>
+    <p-multiSelect [options]="regions" [(ngModel)]="selectedRegions" optionLabel="name" 
+        (onChange)="onRegionChange()"></p-multiSelect>
     <label style="margin: 5px;">Municipality:</label>
-    <p-multiSelect [options]="municipalities" [(ngModel)]="selectedMunicipalities" optionLabel="name"></p-multiSelect>
+    <p-multiSelect [options]="municipalities" [(ngModel)]="selectedMunicipalities" optionLabel="name"
+        (onChange)="onMunicipalitiesChange()"></p-multiSelect>
     <label style="margin: 5px;">Cities:</label>
     <p-multiSelect [options]="cities" [(ngModel)]="selectedCities" optionLabel="name"></p-multiSelect>
   </div>

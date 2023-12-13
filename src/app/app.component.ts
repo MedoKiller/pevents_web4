@@ -9,10 +9,9 @@ import { OrganizationUnit } from './interfaces/organizationUnit';
 
 import { EventService } from './event.service';
 import { OrganizationUnitService } from './organizationUnit.service';
-
+import { CityService } from './city.service';
 
 import { MenuItem } from 'primeng/api';
-
 
 
 
@@ -23,7 +22,9 @@ import { MenuItem } from 'primeng/api';
 })
 export class AppComponent implements OnInit {
 
-  constructor(private eventService: EventService, private OrganizationUnitService: OrganizationUnitService){}
+  constructor(private eventService: EventService, 
+              private OrganizationUnitService: OrganizationUnitService,
+              private CityService: CityService){}
 
   public events: Event[] = [];
 
@@ -102,6 +103,37 @@ export class AppComponent implements OnInit {
       }
     );
   }
+
+  
+
+  public onRegionChange(): void{
+    const selectedRegionIds = this.selectedRegions.map(region => region.id);
+
+    this.OrganizationUnitService.getMunicipalitiesFromRegions(selectedRegionIds).subscribe(
+      (response: OrganizationUnit[])=>{
+        this.municipalities=response;
+      },
+      (error: HttpErrorResponse)=>{
+        alert(error.message);
+      }
+    );
+  }
+
+  
+  public onMunicipalitiesChange():void {
+    const selectedMunicipalitiesIds = this.selectedMunicipalities.map(mun => mun.id);
+
+    console.log(selectedMunicipalitiesIds);
+    this.CityService.getCitiesFromMunicipalities(selectedMunicipalitiesIds).subscribe(
+      (response: City[])=>{
+        this.cities=response;
+      },
+      (error: HttpErrorResponse)=>{
+        alert(error.message);
+      }
+    );
+  }
+
 
 
 }
