@@ -15,6 +15,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { CalendarModule } from 'primeng/calendar';
 import { DropdownModule } from 'primeng/dropdown';
 import { ButtonModule } from 'primeng/button';
+import { TableModule } from 'primeng/table';
 
 
 
@@ -34,7 +35,8 @@ import { ButtonModule } from 'primeng/button';
     InputTextModule,
     CalendarModule,
     DropdownModule,
-    ButtonModule
+    ButtonModule,
+    TableModule
   ],
   providers: [EventService],
   bootstrap: [AppComponent]

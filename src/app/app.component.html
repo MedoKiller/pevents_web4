@@ -38,6 +38,26 @@
     <p-multiSelect [options]="cities" [(ngModel)]="selectedCities" optionLabel="name"></p-multiSelect>
   </div>
   <div class="card flex justify-content-center" style="margin-top: 10px;">
-    <p-button [loading]="loading" label="Search"></p-button>
+    <p-button [loading]="loading" label="Search" (onClick)="filterEvents()"></p-button>
+  </div>
+  <div class="card">
+    <p-table [value]="filteredEvents" [tableStyle]="{ 'min-width': '50rem' }">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Name</th>
+                <th>Date from</th>
+                <th>Date to</th>
+                <th>Free entrance</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-product>
+            <tr>
+                <td>{{ product.code }}</td>
+                <td>{{ product.name }}</td>
+                <td>{{ product.category }}</td>
+                <td>{{ product.quantity }}</td>
+            </tr>
+        </ng-template>
+    </p-table>
   </div>
 </div>
