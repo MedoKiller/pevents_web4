@@ -36,8 +36,8 @@ export class AppComponent implements OnInit {
 
   /*Search form components*/
   eventNameSearch: string='';
-  dateFromSearch: Date = {} as Date;
-  dateToSearch: Date ={} as Date;
+  dateFromSearch!: Date;
+  dateToSearch!: Date;
   freeEntrancePick: FreeEntrancePicker[] = {} as FreeEntrancePicker[];
   selectedfreeEntrancePick:FreeEntrancePicker = {} as FreeEntrancePicker;
 
@@ -47,8 +47,8 @@ export class AppComponent implements OnInit {
   municipalities: OrganizationUnit[]=[];
   selectedMunicipalities: OrganizationUnit[]=[];
 
-  cities!: City[];
-  selectedCities!: City[];
+  cities: City[]=[];
+  selectedCities: City[]=[];
 
   filteredEvents!: Event[];
 
@@ -151,11 +151,16 @@ export class AppComponent implements OnInit {
     this.searchForm.eventName=this.eventNameSearch;
     this.searchForm.dateFrom=this.dateFromSearch;
     this.searchForm.dateTo=this.dateToSearch;
+    this.searchForm.freeEntrance=this.selectedfreeEntrancePick.name;
     this.searchForm.cityIds=this.selectedCities.map(city => city.id);
 
-
-
-
+    this.searchFormService.getFilteredEvents(this.searchForm).subscribe(
+    (response: Event[])=>{
+      console.log(response);
+    },
+    (error: HttpErrorResponse)=>{
+      alert(error.message);
+    });
   }
 
 }

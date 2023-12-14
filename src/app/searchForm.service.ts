@@ -10,10 +10,13 @@ import { Event } from './interfaces/event';
 })
 export class searchFormService {
 
+    private apiServerUrl='http://localhost:8080/search/filter';
+
     constructor(private http: HttpClient) { }
 
     getFilteredEvents(searchForm: SearchForm): Observable<Event[]> {
-        return this.http.post<Event[]>('',searchForm);
+        console.log(searchForm);
+        return this.http.post<Event[]>(this.apiServerUrl,searchForm);
     }
 
 }
