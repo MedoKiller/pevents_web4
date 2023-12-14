@@ -39,7 +39,7 @@ export class AppComponent implements OnInit {
   dateFromSearch!: Date;
   dateToSearch!: Date;
   freeEntrancePick: FreeEntrancePicker[] = {} as FreeEntrancePicker[];
-  selectedfreeEntrancePick:FreeEntrancePicker = {} as FreeEntrancePicker;
+  selectedFreeEntrancePick:FreeEntrancePicker = {} as FreeEntrancePicker;
 
   regions: OrganizationUnit[] =[];
   selectedRegions: OrganizationUnit[]=[];
@@ -67,20 +67,12 @@ export class AppComponent implements OnInit {
     }];
 
   this.freeEntrancePick=[
-    {name: 'YES', value: 'YES'},
-    {name: 'NO', value: 'NO'}
+    {name: 'YES', value: 'DA'},
+    {name: 'NO', value: 'NE'}
   ];
 
     this.getAllRegions();
 
-    this.filteredEvents=[{
-    id: 1000,    
-    name: 'Bamboo Watch',
-    dateFrom: 'Product Description',
-    dateTo: 'bamboo-watch.jpg',
-    freeEntrance: '65'
-    }
-    ]
   }
 
   menuItemClicked: string='searchEvent';
@@ -151,12 +143,13 @@ export class AppComponent implements OnInit {
     this.searchForm.eventName=this.eventNameSearch;
     this.searchForm.dateFrom=this.dateFromSearch;
     this.searchForm.dateTo=this.dateToSearch;
-    this.searchForm.freeEntrance=this.selectedfreeEntrancePick.name;
+    this.searchForm.freeEntrance=this.selectedFreeEntrancePick ? this.selectedFreeEntrancePick.value : null;
     this.searchForm.cityIds=this.selectedCities.map(city => city.id);
 
     this.searchFormService.getFilteredEvents(this.searchForm).subscribe(
     (response: Event[])=>{
       console.log(response);
+      this.filteredEvents=response;
     },
     (error: HttpErrorResponse)=>{
       alert(error.message);
