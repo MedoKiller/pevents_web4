@@ -1,7 +1,10 @@
+import { City } from "./city";
+
 export interface Event {
-     id: number;
-     name: string;
-     dateFrom: string;
-     dateTo: string;
-     freeEntrance: string;   
+     id: number | null;
+     name: string | null;
+     dateFrom: Date | null;
+     dateTo: Date | null;
+     freeEntrance: string | null;
+     city: City | null   
 }

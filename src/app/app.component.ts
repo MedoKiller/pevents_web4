@@ -30,9 +30,22 @@ export class AppComponent implements OnInit {
               private cityService: CityService,
               private searchFormService: searchFormService){}
 
-  public events: Event[] = [];
+  events: Event[] = [];
 
   items: MenuItem[] =[];
+
+  /* Add / update form components */
+
+  eventNameAdd: string='';
+  dateFromAdd!: Date;
+  dateToAdd!: Date;
+  selectedFreeEntrancePickAdd: FreeEntrancePicker = {} as FreeEntrancePicker;
+  citiesAdd: City[]=[];
+  selectedCityAdd: City ={} as City;
+  eventToAdd: Event={} as Event;
+
+
+
 
   /*Search form components*/
   eventNameSearch: string='';
@@ -72,6 +85,7 @@ export class AppComponent implements OnInit {
   ];
 
     this.getAllRegions();
+    this.getAllCities();
 
   }
 
@@ -107,7 +121,18 @@ export class AppComponent implements OnInit {
         alert(error.message);
       }
     );
-  } 
+  }
+  
+  public getAllCities(): void{
+    this.cityService.getAllCities().subscribe(
+      (response: City[])=>{
+        this.citiesAdd=response;
+      },
+      (error: HttpErrorResponse)=>{
+        alert(error.message);
+      }
+    );
+  }
 
   public onRegionChange(): void{
     const selectedRegionIds = this.selectedRegions.map(region => region.id);
@@ -147,13 +172,42 @@ export class AppComponent implements OnInit {
     this.searchForm.cityIds=this.selectedCities.map(city => city.id);
 
     this.searchFormService.getFilteredEvents(this.searchForm).subscribe(
-    (response: Event[])=>{
-      console.log(response);
-      this.filteredEvents=response;
-    },
-    (error: HttpErrorResponse)=>{
-      alert(error.message);
-    });
+      (response: Event[])=>{
+        console.log(response);
+        this.filteredEvents=response;
+      },
+      (error: HttpErrorResponse)=>{
+        alert(error.message);
+      });
   }
+
+
+  public onUpdateEvent(rowEvent: Event){
+    console.log(rowEvent);
+  }
+
+  public onDeleteEvent(rowEvent: Event){
+    console.log(rowEvent);
+  }
+
+  public addEvent(){
+    this.eventToAdd.name=this.eventNameAdd;
+    this.eventToAdd.dateFrom=this.dateFromAdd;
+    this.eventToAdd.dateTo=this.dateToAdd;
+    this.eventToAdd.freeEntrance=this.selectedFreeEntrancePickAdd.value;
+    this.eventToAdd.city=this.selectedCityAdd;
+
+    this.eventService.addEvent(this.eventToAdd).subscribe(
+      (response: Event)=>{
+        console.log(response);
+      },
+      (error: HttpErrorResponse)=>{
+        alert(error.message);
+      });
+
+  }
+
+
+
 
 }

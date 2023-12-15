@@ -14,20 +14,8 @@ export class CityService{
 
     constructor(private http: HttpClient){}
 
-    public getEvents(): Observable<Event[]>{
-        return this.http.get<Event[]>(`${this.apiServerUrl}/event/all`);
-    }
-
-    public addEvent(event: Event): Observable<Event>{
-        return this.http.post<Event>(`${this.apiServerUrl}/event/add`, event);
-    }
-
-    public updateEvent(event: Event): Observable<Event>{
-        return this.http.put<Event>(`${this.apiServerUrl}/event/update`, event);
-    }
-
-    public deleteEvent(eventId: number): Observable<void>{
-        return this.http.delete<void>(`${this.apiServerUrl}/event/delete/${eventId}`);
+    public getAllCities(): Observable<City[]>{
+        return this.http.get<City[]>(`${this.apiServerUrl}/city/all`);
     }
 
     public getCitiesFromMunicipalities(selectedMunicipalitiesIds: number[]): Observable<City[]> {
