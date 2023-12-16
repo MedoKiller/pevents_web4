@@ -39,6 +39,8 @@ export class AppComponent implements OnInit {
   eventNameAdd: string='';
   dateFromAdd!: Date;
   dateToAdd!: Date;
+  formattedDateToAdd!: Date | null ;
+  formattedDateFromAdd!: Date |null;
   selectedFreeEntrancePickAdd: FreeEntrancePicker = {} as FreeEntrancePicker;
   citiesAdd: City[]=[];
   selectedCityAdd: City ={} as City;
@@ -191,11 +193,27 @@ export class AppComponent implements OnInit {
   }
 
   public addEvent(){
+    if(this.dateFromAdd instanceof Date) {
+      this.formattedDateFromAdd = new Date(this.dateFromAdd.getTime()); // Clone the original date
+      this.formattedDateFromAdd.setSeconds(0, 0); // Set seconds and milliseconds to zero
+    } else {
+      this.formattedDateFromAdd = null;
+    }
+    console.log(this.dateFromAdd);
+    console.log(this.formattedDateFromAdd);
+
+    if(this.dateToAdd instanceof Date) {
+      this.formattedDateToAdd = new Date(this.dateToAdd.getTime()); // Clone the original date
+      this.formattedDateToAdd.setSeconds(0, 0); // Set seconds and milliseconds to zero
+    } else {
+      this.formattedDateToAdd = null;
+    }
+
     this.eventToAdd.name=this.eventNameAdd;
-    this.eventToAdd.dateFrom=this.dateFromAdd;
-    this.eventToAdd.dateTo=this.dateToAdd;
+    this.eventToAdd.dateFrom=this.formattedDateFromAdd;
+    this.eventToAdd.dateTo=this.formattedDateToAdd;
     this.eventToAdd.freeEntrance=this.selectedFreeEntrancePickAdd.value;
-    this.eventToAdd.city=this.selectedCityAdd;
+    this.eventToAdd.cityDTO=this.selectedCityAdd;
 
     this.eventService.addEvent(this.eventToAdd).subscribe(
       (response: Event)=>{

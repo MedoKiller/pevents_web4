@@ -6,5 +6,5 @@ export interface Event {
      dateFrom: Date | null;
      dateTo: Date | null;
      freeEntrance: string | null;
-     city: City | null   
+     cityDTO: City | null   
 }
