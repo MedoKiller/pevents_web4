@@ -15,7 +15,6 @@ export class searchFormService {
     constructor(private http: HttpClient) { }
 
     getFilteredEvents(searchForm: SearchForm): Observable<Event[]> {
-        console.log(searchForm);
         return this.http.post<Event[]>(this.apiServerUrl,searchForm);
     }
 

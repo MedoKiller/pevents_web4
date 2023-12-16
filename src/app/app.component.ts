@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 
 import { FreeEntrancePicker } from './interfaces/freeEntrancePicker';
 import { Event } from './interfaces/event';
@@ -12,7 +12,7 @@ import { OrganizationUnitService } from './organizationUnit.service';
 import { CityService } from './city.service';
 import { searchFormService } from './searchForm.service';
 
-import { MenuItem, MessageService } from 'primeng/api';
+import { MenuItem, MessageService,ConfirmationService,ConfirmEventType} from 'primeng/api';
 
 import { SearchForm } from './interfaces/searchForm';
 
@@ -30,7 +30,8 @@ export class AppComponent implements OnInit {
               private organizationUnitService: OrganizationUnitService,
               private cityService: CityService,
               private searchFormService: searchFormService,
-              private messageService: MessageService){}
+              private messageService: MessageService,
+              private confirmationService: ConfirmationService){}
 
   events: Event[] = [];
 
@@ -48,6 +49,7 @@ export class AppComponent implements OnInit {
   selectedCityAdd: City| null = null;
   eventToAdd: Event={} as Event;
 
+  /* Update form components */
   idEventToUpdate!: number| null;
   updateClicked: string='';
   updateEventName: string |null='';
@@ -72,10 +74,9 @@ export class AppComponent implements OnInit {
   selectedMunicipalities: OrganizationUnit[]=[];
   cities: City[]=[];
   selectedCities: City[]=[];
-
   filteredEvents!: Event[];
-
   searchForm: SearchForm = {} as SearchForm;
+
 
   ngOnInit(): void {
     /*this.getEvents(); */
@@ -139,7 +140,6 @@ export class AppComponent implements OnInit {
     this.cityService.getAllCities().subscribe(
       (response: City[])=>{
         this.citiesAdd=response;
-        console.log(this.citiesAdd);
       },
       (error: HttpErrorResponse)=>{
         alert(error.message);
@@ -186,13 +186,24 @@ export class AppComponent implements OnInit {
 
     this.searchFormService.getFilteredEvents(this.searchForm).subscribe(
       (response: Event[])=>{
-        console.log(response);
         this.filteredEvents=response;
       },
       (error: HttpErrorResponse)=>{
         alert(error.message);
       });
   }
+
+
+  public clearFilterEvents():void{
+    this.eventNameSearch='';
+    this.dateFromSearch=null;
+    this.dateToSearch=null;
+    this.selectedFreeEntrancePick={} as FreeEntrancePicker;
+    this.selectedCities=[];
+    this.selectedMunicipalities = [];
+    this.selectedRegions=[];
+  }
+
 
 
   public onUpdateEvent(rowEvent: Event){
@@ -215,8 +226,39 @@ export class AppComponent implements OnInit {
   }
 
   public onDeleteEvent(rowEvent: Event){
-    console.log(rowEvent);
+
+    this.confirmationService.confirm({
+      message: 'Do you want to delete this record?',
+      header: 'Delete Confirmation',
+      icon: 'pi pi-info-circle',
+      acceptButtonStyleClass:"p-button-danger p-button-text",
+      rejectButtonStyleClass:"p-button-text p-button-text",
+      acceptIcon:"none",
+      rejectIcon:"none",
+
+      accept: () => {
+        this.deleteEvent(rowEvent.id);
+        this.messageService.add({ severity: 'info', summary: 'Confirmed', detail: 'Event deleted' });
+      },
+      reject: () => {
+        this.messageService.add({ severity: 'error', summary: 'Rejected', detail: 'You have rejected deleting the event' });
+      }
+  });
+
   }
+
+
+  public deleteEvent(id: number|null):void{
+    this.eventService.deleteEvent(id).subscribe({
+      next: (response) => {
+        this.filterEvents();
+      },
+      error: (error) => {
+
+      }
+    });
+  }
+
 
   public addEvent(){
     if(this.dateFromAdd instanceof Date) {
@@ -247,15 +289,22 @@ export class AppComponent implements OnInit {
           detail: 'Please select a city.' 
     });
     }else{
-      console.log(this.eventToAdd);
-    this.eventService.addEvent(this.eventToAdd).subscribe(
-      (response: Event)=>{
-        console.log(response);
-      },
-      (error: HttpErrorResponse)=>{
-        alert(error.message);
-      });
-    }
+      this.eventService.addEvent(this.eventToAdd).subscribe(
+        (response: Event)=>{
+          this.messageService.add({ 
+            severity: 'success', 
+            summary: 'Success', 
+            detail: 'Event created!' 
+        });
+
+        this.menuItemClicked='searchEvent';
+        this.filterEvents();
+
+        },
+        (error: HttpErrorResponse)=>{
+          alert(error.message);
+        });
+      }
   }
 
 
@@ -300,15 +349,19 @@ export class AppComponent implements OnInit {
           detail: 'Please select a city.' 
     });
     }else{
-      console.log(this.eventToUpdate);
+   
       this.eventService.updateEvent(this.eventToUpdate).subscribe(
       (response: Event)=>{
-        console.log(response);
         this.messageService.add({ 
           severity: 'success', 
           summary: 'Update complete', 
           detail: 'Event information have been succesfully updated!' 
       });
+
+      this.updateClicked='';
+      this.menuItemClicked='searchEvent';
+      this.filterEvents();
+
       },
       (error: HttpErrorResponse)=>{
         alert(error.message);

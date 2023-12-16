@@ -37,8 +37,11 @@
     <label style="margin: 5px;">Cities:</label>
     <p-multiSelect [options]="cities" [(ngModel)]="selectedCities" optionLabel="name"></p-multiSelect>
   </div>
-  <div class="card flex justify-content-center" style="margin-top: 10px;">
-    <p-button [loading]="loading" label="Search" (onClick)="filterEvents()"></p-button>
+  <div style="margin-top: 10px; display: flex;">
+    <div style="margin-right: 10px;">
+      <p-button [loading]="loading" label="Search" (onClick)="filterEvents()"></p-button>
+    </div>
+    <p-button label="Clear filters" (onClick)="clearFilterEvents()"></p-button>
   </div>
   <div class="card" style="margin-top: 5px;">
     <p-table [value]="filteredEvents" [tableStyle]="{ 'min-width': '50rem' }">
@@ -60,7 +63,7 @@
                 <td>{{ event.cityDTO.name }}</td>
                 <td>{{ event.freeEntrance }}</td>
                 <td>
-                  <p-button  label="Update" (click)="onUpdateEvent(event)" icon="pi pi-pencil"></p-button>
+                  <p-button label="Update" (click)="onUpdateEvent(event)" icon="pi pi-pencil"></p-button>
                   <p-button label="Delete" (click)="onDeleteEvent(event)" icon="pi pi-times" label="Delete" styleClass="p-button-danger"></p-button>
               </td>
             </tr>
@@ -147,6 +150,6 @@
     </div>
   </div>
 </div>
-
+<p-confirmDialog></p-confirmDialog>
 <p-toast></p-toast>
 

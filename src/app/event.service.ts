@@ -23,7 +23,7 @@ export class EventService{
         return this.http.put<Event>(`${this.apiServerUrl}/event/update`, event);
     }
 
-    public deleteEvent(eventId: number): Observable<void>{
+    public deleteEvent(eventId: number|null): Observable<void>{
         return this.http.delete<void>(`${this.apiServerUrl}/event/delete/${eventId}`);
     }
 
