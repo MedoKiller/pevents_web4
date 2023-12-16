@@ -12,9 +12,10 @@ import { OrganizationUnitService } from './organizationUnit.service';
 import { CityService } from './city.service';
 import { searchFormService } from './searchForm.service';
 
-import { MenuItem } from 'primeng/api';
+import { MenuItem, MessageService } from 'primeng/api';
 
 import { SearchForm } from './interfaces/searchForm';
+
 
 
 
@@ -28,40 +29,47 @@ export class AppComponent implements OnInit {
   constructor(private eventService: EventService, 
               private organizationUnitService: OrganizationUnitService,
               private cityService: CityService,
-              private searchFormService: searchFormService){}
+              private searchFormService: searchFormService,
+              private messageService: MessageService){}
 
   events: Event[] = [];
 
   items: MenuItem[] =[];
 
-  /* Add / update form components */
+  /* Add form components */
 
-  eventNameAdd: string='';
-  dateFromAdd!: Date;
-  dateToAdd!: Date;
+  eventNameAdd: string| null='';
+  dateFromAdd!: Date | null;
+  dateToAdd!: Date |null;
   formattedDateToAdd!: Date | null ;
   formattedDateFromAdd!: Date |null;
   selectedFreeEntrancePickAdd: FreeEntrancePicker = {} as FreeEntrancePicker;
   citiesAdd: City[]=[];
-  selectedCityAdd: City ={} as City;
+  selectedCityAdd: City| null = null;
   eventToAdd: Event={} as Event;
 
-
+  idEventToUpdate!: number| null;
+  updateClicked: string='';
+  updateEventName: string |null='';
+  updateDateFrom!: Date |null;
+  updateDateTo!: Date |null;
+  formattedDateToUpdate!: Date | null ;
+  formattedDateFromUpdate!: Date |null;
+  updateSelectedFreeEntrancePick: FreeEntrancePicker = {} as FreeEntrancePicker;
+  selectedCityUpdate: City| null = null;
+  eventToUpdate: Event={} as Event;
 
 
   /*Search form components*/
   eventNameSearch: string='';
-  dateFromSearch!: Date;
-  dateToSearch!: Date;
+  dateFromSearch!: Date |null;
+  dateToSearch!: Date |null;
   freeEntrancePick: FreeEntrancePicker[] = {} as FreeEntrancePicker[];
   selectedFreeEntrancePick:FreeEntrancePicker = {} as FreeEntrancePicker;
-
   regions: OrganizationUnit[] =[];
   selectedRegions: OrganizationUnit[]=[];
-
   municipalities: OrganizationUnit[]=[];
   selectedMunicipalities: OrganizationUnit[]=[];
-
   cities: City[]=[];
   selectedCities: City[]=[];
 
@@ -95,10 +103,12 @@ export class AppComponent implements OnInit {
 
   public onAddEventClick(){
     this.menuItemClicked='addEvent';
+    this.updateClicked='';
   }
 
   public onSearchEventClick(){
     this.menuItemClicked='searchEvent';
+    this.updateClicked='';
   }
 
   loading: boolean=false; /*iskoristi ovo kad napravis dohvat podataka nakon submita forme, napravi fciju onLoad() koja hendla ovu varijablu*/
@@ -129,6 +139,7 @@ export class AppComponent implements OnInit {
     this.cityService.getAllCities().subscribe(
       (response: City[])=>{
         this.citiesAdd=response;
+        console.log(this.citiesAdd);
       },
       (error: HttpErrorResponse)=>{
         alert(error.message);
@@ -185,7 +196,22 @@ export class AppComponent implements OnInit {
 
 
   public onUpdateEvent(rowEvent: Event){
-    console.log(rowEvent);
+    this.menuItemClicked='';
+    this.updateClicked='updateEvent';
+
+    this.updateEventName=rowEvent.name;
+    this.updateDateFrom=(rowEvent.dateFrom==null)?null: new Date(rowEvent.dateFrom);
+    this.updateDateTo=(rowEvent.dateTo==null)?null: new Date(rowEvent.dateTo);
+    if(rowEvent.freeEntrance=='NE'){
+      this.updateSelectedFreeEntrancePick= {name: 'NO', value: 'NE'};
+    }else{
+      this.updateSelectedFreeEntrancePick= {name: 'YES', value: 'DA'}; 
+    }
+
+    this.selectedCityUpdate=rowEvent.cityDTO;
+
+    this.idEventToUpdate=rowEvent.id;
+
   }
 
   public onDeleteEvent(rowEvent: Event){
@@ -194,17 +220,15 @@ export class AppComponent implements OnInit {
 
   public addEvent(){
     if(this.dateFromAdd instanceof Date) {
-      this.formattedDateFromAdd = new Date(this.dateFromAdd.getTime()); // Clone the original date
-      this.formattedDateFromAdd.setSeconds(0, 0); // Set seconds and milliseconds to zero
+      this.formattedDateFromAdd = new Date(this.dateFromAdd.getTime());
+      this.formattedDateFromAdd.setSeconds(0, 0);
     } else {
       this.formattedDateFromAdd = null;
     }
-    console.log(this.dateFromAdd);
-    console.log(this.formattedDateFromAdd);
 
     if(this.dateToAdd instanceof Date) {
-      this.formattedDateToAdd = new Date(this.dateToAdd.getTime()); // Clone the original date
-      this.formattedDateToAdd.setSeconds(0, 0); // Set seconds and milliseconds to zero
+      this.formattedDateToAdd = new Date(this.dateToAdd.getTime());
+      this.formattedDateToAdd.setSeconds(0, 0);
     } else {
       this.formattedDateToAdd = null;
     }
@@ -212,9 +236,18 @@ export class AppComponent implements OnInit {
     this.eventToAdd.name=this.eventNameAdd;
     this.eventToAdd.dateFrom=this.formattedDateFromAdd;
     this.eventToAdd.dateTo=this.formattedDateToAdd;
-    this.eventToAdd.freeEntrance=this.selectedFreeEntrancePickAdd.value;
+    this.eventToAdd.freeEntrance=this.selectedFreeEntrancePickAdd? this.selectedFreeEntrancePickAdd.value : null;
     this.eventToAdd.cityDTO=this.selectedCityAdd;
 
+
+    if (this.selectedCityAdd===null || this.selectedCityAdd===undefined) {
+      this.messageService.add({ 
+          severity: 'warn', 
+          summary: 'Validation Error', 
+          detail: 'Please select a city.' 
+    });
+    }else{
+      console.log(this.eventToAdd);
     this.eventService.addEvent(this.eventToAdd).subscribe(
       (response: Event)=>{
         console.log(response);
@@ -222,9 +255,67 @@ export class AppComponent implements OnInit {
       (error: HttpErrorResponse)=>{
         alert(error.message);
       });
+    }
+  }
+
+
+  public clearAddEvent(): void{
+
+    this.eventToAdd={} as Event;
+    this.eventNameAdd='';
+    this.dateFromAdd=null;
+    this.dateToAdd=null;
+    this.selectedCityAdd=null;
+    this.selectedFreeEntrancePickAdd={} as FreeEntrancePicker;
 
   }
 
+  public updateEvent(): void{
+
+    if(this.updateDateFrom instanceof Date) {
+      this.formattedDateFromUpdate = new Date(this.updateDateFrom.getTime());
+      this.formattedDateFromUpdate.setSeconds(0, 0);
+    } else {
+      this.formattedDateFromUpdate = null;
+    }
+
+    if(this.updateDateTo instanceof Date) {
+      this.formattedDateToUpdate = new Date(this.updateDateTo.getTime());
+      this.formattedDateToUpdate.setSeconds(0, 0);
+    } else {
+      this.formattedDateToUpdate = null;
+    }
+
+    this.eventToUpdate.id=this.idEventToUpdate;
+    this.eventToUpdate.name=this.updateEventName;
+    this.eventToUpdate.dateFrom=this.formattedDateFromUpdate;
+    this.eventToUpdate.dateTo=this.formattedDateToUpdate;
+    this.eventToUpdate.freeEntrance=this.updateSelectedFreeEntrancePick? this.updateSelectedFreeEntrancePick.value : null;
+    this.eventToUpdate.cityDTO=this.selectedCityUpdate;
+
+    if (this.selectedCityUpdate===null || this.selectedCityUpdate===undefined) {
+      this.messageService.add({ 
+          severity: 'warn', 
+          summary: 'Validation Error', 
+          detail: 'Please select a city.' 
+    });
+    }else{
+      console.log(this.eventToUpdate);
+      this.eventService.updateEvent(this.eventToUpdate).subscribe(
+      (response: Event)=>{
+        console.log(response);
+        this.messageService.add({ 
+          severity: 'success', 
+          summary: 'Update complete', 
+          detail: 'Event information have been succesfully updated!' 
+      });
+      },
+      (error: HttpErrorResponse)=>{
+        alert(error.message);
+      });
+    }
+
+  }
 
 
 

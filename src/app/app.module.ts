@@ -16,6 +16,8 @@ import { CalendarModule } from 'primeng/calendar';
 import { DropdownModule } from 'primeng/dropdown';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 
 
 
@@ -36,9 +38,10 @@ import { TableModule } from 'primeng/table';
     CalendarModule,
     DropdownModule,
     ButtonModule,
-    TableModule
+    TableModule,
+    ToastModule
   ],
-  providers: [EventService],
+  providers: [EventService,MessageService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

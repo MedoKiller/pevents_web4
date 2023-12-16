@@ -16,11 +16,6 @@ export class EventService{
     }
 
     public addEvent(event: Event): Observable<Event>{
-        
-        console.log(event);
-        console.log(event.dateFrom?.toISOString());
-        console.log(event.dateFrom?.toString());
-        
         return this.http.post<Event>(`${this.apiServerUrl}/event/add`, event);
     }
 

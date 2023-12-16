@@ -1,4 +1,4 @@
 export interface FreeEntrancePicker {
-    name: string,
-    value: string 
+    name: string | null,
+    value: string | null
 }

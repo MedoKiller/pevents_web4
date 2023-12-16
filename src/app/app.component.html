@@ -47,6 +47,7 @@
                 <th>Name</th>
                 <th>Date from</th>
                 <th>Date to</th>
+                <th>City</th>
                 <th>Free entrance</th>
                 <th>Actions</th>
             </tr>
@@ -56,10 +57,11 @@
                 <td>{{ event.name }}</td>
                 <td>{{ event.dateFrom }}</td>
                 <td>{{ event.dateTo }}</td>
+                <td>{{ event.cityDTO.name }}</td>
                 <td>{{ event.freeEntrance }}</td>
                 <td>
-                  <button pButton type="button" label="Update" (click)="onUpdateEvent(event)" style="margin-right: 5px;"></button>
-                  <button pButton type="button" label="Delete" (click)="onDeleteEvent(event)"></button>
+                  <p-button  label="Update" (click)="onUpdateEvent(event)" icon="pi pi-pencil"></p-button>
+                  <p-button label="Delete" (click)="onDeleteEvent(event)" icon="pi pi-times" label="Delete" styleClass="p-button-danger"></p-button>
               </td>
             </tr>
         </ng-template>
@@ -98,7 +100,53 @@
   <div>
     <p-dropdown [options]="citiesAdd" [(ngModel)]="selectedCityAdd" optionLabel="name" [showClear]="true" placeholder="Select a City" [filter]="true" filterBy="name"></p-dropdown>
   </div>
-  <div class="card flex justify-content-center" style="margin-top: 10px;">
-    <p-button [loading]="loading" label="Add" (onClick)="addEvent()"></p-button>
+  <div style="margin-top: 10px; display: flex;">
+    <div style="margin-right: 10px;">
+        <p-button [loading]="loading" label="Add" (onClick)="addEvent()"></p-button>
+    </div>
+    <div>
+        <p-button label="Clear all" (onClick)="clearAddEvent()"></p-button>
+    </div>
+</div>
+</div>
+
+<div *ngIf="updateClicked === 'updateEvent'" style="margin-top: 25px;">
+  <div>
+    <label>Event name</label>
+  </div>
+  <div>
+    <input type="text" pInputText [(ngModel)]="updateEventName" />
+  </div>
+  <div style="margin-top: 10px;">
+    <label>Event start date</label>
+  </div>
+  <div>
+    <p-calendar [showIcon]="true" [showTime]="true" [(ngModel)]="updateDateFrom"></p-calendar>
+  </div>
+  <div style="margin-top: 10px;">
+    <label>Event end date</label>
+  </div>
+  <div>
+    <p-calendar [showIcon]="true" [showTime]="true" [(ngModel)]="updateDateTo"></p-calendar>
+  </div>
+  <div style="margin-top: 10px;">
+    <label>Free entrance?</label>
+  </div>
+  <div>
+    <p-dropdown [options]="freeEntrancePick" [(ngModel)]="updateSelectedFreeEntrancePick" optionLabel="name" [showClear]="true"></p-dropdown>
+  </div>
+  <div style="margin-top: 10px;">
+    <label>City</label>
+  </div>
+  <div>
+    <p-dropdown [options]="citiesAdd" [(ngModel)]="selectedCityUpdate" optionLabel="name" [showClear]="true" placeholder="Select a City" [filter]="true" filterBy="name"></p-dropdown>
+  </div>
+  <div style="margin-top: 10px; display: flex;">
+    <div style="margin-right: 10px;">
+        <p-button [loading]="loading" label="Update" (onClick)="updateEvent()"></p-button>
+    </div>
   </div>
 </div>
+
+<p-toast></p-toast>
+
